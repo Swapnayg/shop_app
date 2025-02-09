@@ -37,7 +37,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
   bool _validate_f_pass = false;
   bool _f_email_validate = false;
   bool _password_f_validate = false;
-  bool _validate_f_confpass = false;
+  final bool _validate_f_confpass = false;
 
   bool _fc_passVisibility = true;
   bool _f_passVisibility = true;
@@ -255,7 +255,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                 fontSize: 14.0,
                 color: Colors.red,
               ),
-              children: <TextSpan>[TextSpan(text: '$f_error_lbl')],
+              children: <TextSpan>[TextSpan(text: f_error_lbl)],
             ),
           ),
           RichText(
@@ -264,7 +264,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                 fontSize: 14.0,
                 color: Colors.green,
               ),
-              children: <TextSpan>[TextSpan(text: '$f_lbl_sucess')],
+              children: <TextSpan>[TextSpan(text: f_lbl_sucess)],
             ),
           ),
           // Sign In button
@@ -278,17 +278,17 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                     if (_validatePassword(_f_password.text)) {
                       if (_password_f_validate) {
                         f_error_lbl = "";
-                        String error_f_val = '';
+                        String errorFVal = '';
                         _updatepass().then((value) {
-                          error_f_val = value;
+                          errorFVal = value;
                           Timer(const Duration(seconds: 1), () {
                             setState(() {
-                              if (error_f_val == "sucess") {
+                              if (errorFVal == "sucess") {
                                 f_lbl_sucess = "Password Changed.";
                                 f_error_lbl = "";
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => const LoginPage()));
-                              } else if (error_f_val == "not") {
+                              } else if (errorFVal == "not") {
                                 f_error_lbl = "User not found.";
                                 f_lbl_sucess = "";
                               } else {
@@ -302,7 +302,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                         f_error_lbl = "Password doesn't match.";
                       }
                     } else {
-                      f_error_lbl = '$_f_errorMessage';
+                      f_error_lbl = _f_errorMessage;
                     }
                   } else {
                     f_lbl_sucess = "";

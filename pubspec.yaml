@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.3.2
   google_sign_in: any
   email_validator: any
+  provider: any
   # smooth_star_rating: any
   # pecahan_rupiah: any
 

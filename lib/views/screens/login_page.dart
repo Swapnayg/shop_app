@@ -221,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontSize: 14.0,
                 color: Colors.red,
               ),
-              children: <TextSpan>[TextSpan(text: '$l_error_lbl')],
+              children: <TextSpan>[TextSpan(text: l_error_lbl)],
             ),
           ),
           RichText(
@@ -230,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontSize: 14.0,
                 color: Colors.green,
               ),
-              children: <TextSpan>[TextSpan(text: '$l_lbl_sucess')],
+              children: <TextSpan>[TextSpan(text: l_lbl_sucess)],
             ),
           ),
           // Sign In button
@@ -242,20 +242,20 @@ class _LoginPageState extends State<LoginPage> {
                 if (_l_email.text.isNotEmpty && _l_password.text.isNotEmpty) {
                   if (_l_email_validate) {
                     l_error_lbl = "";
-                    String error_l_val = '';
+                    String errorLVal = '';
                     _login().then((value) {
-                      error_l_val = value;
+                      errorLVal = value;
                       Timer(const Duration(seconds: 1), () {
                         setState(() {
-                          if (error_l_val == "mail") {
+                          if (errorLVal == "mail") {
                             l_error_lbl = "Please verify your account.";
                             l_lbl_sucess = "";
-                          } else if (error_l_val == "sucess") {
+                          } else if (errorLVal == "sucess") {
                             l_lbl_sucess = "Account verified.";
                             l_error_lbl = "";
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const PageSwitcher()));
-                          } else if (error_l_val == "not") {
+                          } else if (errorLVal == "not") {
                             l_error_lbl = "User not found.";
                             l_lbl_sucess = "";
                           } else {
@@ -287,6 +287,43 @@ class _LoginPageState extends State<LoginPage> {
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
                   fontFamily: 'poppins'),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await _auth.signInWithGoogle().then((c_user) {
+                if (c_user == "success") {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const PageSwitcher()));
+                }
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: AppColor.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12),
+              backgroundColor: AppColor.primarySoft,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              elevation: 0,
+              shadowColor: Colors.transparent,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/Google.svg',
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: const Text(
+                    'Sigin with Google',
+                    style: TextStyle(
+                      color: AppColor.secondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ],

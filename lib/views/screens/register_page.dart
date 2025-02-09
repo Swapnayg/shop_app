@@ -8,6 +8,8 @@ import 'package:shop_app/views/screens/login_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:shop_app/views/screens/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/views/screens/page_switcher.dart';
 
 String error_lbl = "";
 String lbl_sucess = "";
@@ -318,7 +320,7 @@ class _LoginPageState extends State<RegisterPage> {
                 fontSize: 14.0,
                 color: Colors.red,
               ),
-              children: <TextSpan>[TextSpan(text: '$error_lbl')],
+              children: <TextSpan>[TextSpan(text: error_lbl)],
             ),
           ),
           RichText(
@@ -327,7 +329,7 @@ class _LoginPageState extends State<RegisterPage> {
                 fontSize: 14.0,
                 color: Colors.green,
               ),
-              children: <TextSpan>[TextSpan(text: '$lbl_sucess')],
+              children: <TextSpan>[TextSpan(text: lbl_sucess)],
             ),
           ),
           const SizedBox(height: 24),
@@ -347,16 +349,16 @@ class _LoginPageState extends State<RegisterPage> {
                     if (_validatePassword(_password.text)) {
                       if (_password_validate) {
                         error_lbl = "";
-                        String error_val = '';
+                        String errorVal = '';
                         _signup().then((value) {
-                          error_val = value;
+                          errorVal = value;
                         });
                         Timer(const Duration(seconds: 3), () {
                           setState(() {
-                            if (error_val == "fail") {
+                            if (errorVal == "fail") {
                               error_lbl = "Email already exits.";
                               lbl_sucess = "";
-                            } else if (error_val == "sucess") {
+                            } else if (errorVal == "sucess") {
                               lbl_sucess =
                                   "Please verify your account in order to login.";
                               error_lbl = "";
@@ -372,7 +374,7 @@ class _LoginPageState extends State<RegisterPage> {
                         error_lbl = "Password doesn't match.";
                       }
                     } else {
-                      error_lbl = '$_errorMessage';
+                      error_lbl = _errorMessage;
                     }
                   } else {
                     error_lbl = "Please enter valid email address.";
@@ -408,7 +410,14 @@ class _LoginPageState extends State<RegisterPage> {
           ),
           // SIgn in With Google
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              await _auth.signInWithGoogle().then((c_user) {
+                if (c_user == "success") {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const PageSwitcher()));
+                }
+              });
+            },
             style: ElevatedButton.styleFrom(
               foregroundColor: AppColor.primary,
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12),
@@ -427,7 +436,7 @@ class _LoginPageState extends State<RegisterPage> {
                 Container(
                   margin: const EdgeInsets.only(left: 16),
                   child: const Text(
-                    'Continue with Google',
+                    'Sigin with Google',
                     style: TextStyle(
                       color: AppColor.secondary,
                       fontWeight: FontWeight.w600,
@@ -483,13 +492,13 @@ class _LoginPageState extends State<RegisterPage> {
   }
 
   Future<String> _signup() async {
-    String send_result = "";
+    String sendResult = "";
     final user = await _auth.createUserWithEmailAndPassword(
         _email.text.trim(), _password.text.trim());
     if (user != null) {
-      CollectionReference db_users =
+      CollectionReference dbUsers =
           FirebaseFirestore.instance.collection('users');
-      db_users
+      dbUsers
           .doc(_email.text.trim())
           .set({
             'full_name': _fullname.text.trim().toString(),
@@ -502,10 +511,10 @@ class _LoginPageState extends State<RegisterPage> {
           .catchError((error) => debugPrint("Failed to add user: $error"));
       user.sendEmailVerification();
       clearText();
-      send_result = "sucess";
+      sendResult = "sucess";
     } else {
-      send_result = "fail";
+      sendResult = "fail";
     }
-    return send_result;
+    return sendResult;
   }
 }
