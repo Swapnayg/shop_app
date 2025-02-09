@@ -289,6 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                   fontFamily: 'poppins'),
             ),
           ),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () async {
               await _auth.signInWithGoogle().then((c_user) {

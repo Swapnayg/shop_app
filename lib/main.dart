@@ -50,7 +50,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Nunito',
       ),
-      home: l_status == "login" ? const PageSwitcher() : WelcomePage(),
+      // home: l_status == "login" ? const PageSwitcher() : WelcomePage(),
+      home: l_status == "login" ? const PageSwitcher() : PageSwitcher(),
     );
   }
 }
