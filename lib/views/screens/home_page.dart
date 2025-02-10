@@ -13,7 +13,6 @@ import 'package:shop_app/views/screens/search_page.dart';
 import 'package:shop_app/views/widgets/category_card.dart';
 import 'package:shop_app/views/widgets/custom_icon_button_widget.dart';
 import 'package:shop_app/views/widgets/dummy_search_widget_1.dart';
-import 'package:shop_app/views/widgets/flashsale_countdown_tile.dart';
 import 'package:shop_app/views/widgets/item_card.dart';
 
 class HomePage extends StatefulWidget {

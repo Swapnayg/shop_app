@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Nunito',
       ),
       // home: l_status == "login" ? const PageSwitcher() : WelcomePage(),
-      home: l_status == "login" ? const PageSwitcher() : PageSwitcher(),
+      home: l_status == "login" ? const PageSwitcher() : WelcomePage(),
     );
   }
 }

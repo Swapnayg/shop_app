@@ -292,10 +292,16 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () async {
-              await _auth.signInWithGoogle().then((c_user) {
-                if (c_user == "success") {
+              await _auth.signInWithGoogle().then((cUser) {
+                debugPrint(cUser);
+                if (cUser == "success") {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const PageSwitcher()));
+                } else {
+                  setState(() {
+                    l_lbl_sucess = "";
+                    l_error_lbl = cUser.toString();
+                  });
                 }
               });
             },

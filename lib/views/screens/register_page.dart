@@ -8,7 +8,6 @@ import 'package:shop_app/views/screens/login_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:shop_app/views/screens/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 import 'package:shop_app/views/screens/page_switcher.dart';
 
 String error_lbl = "";
@@ -411,10 +410,16 @@ class _LoginPageState extends State<RegisterPage> {
           // SIgn in With Google
           ElevatedButton(
             onPressed: () async {
-              await _auth.signInWithGoogle().then((c_user) {
-                if (c_user == "success") {
+              await _auth.signInWithGoogle().then((cUser) {
+                debugPrint(cUser);
+                if (cUser == "success") {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const PageSwitcher()));
+                } else {
+                  setState(() {
+                    error_lbl = cUser.toString();
+                    lbl_sucess = "";
+                  });
                 }
               });
             },
@@ -505,7 +510,8 @@ class _LoginPageState extends State<RegisterPage> {
             'username': _name.text.trim().toString(),
             'uid': user.uid.trim().toString(),
             'password': _password.text.trim().toString(),
-            'type': 'email'
+            'type': 'email',
+            'photo_url': "",
           })
           .then((value) => debugPrint("User Added"))
           .catchError((error) => debugPrint("Failed to add user: $error"));

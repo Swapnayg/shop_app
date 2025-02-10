@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -76,21 +75,21 @@ class AuthService {
 
   Future<String?> signInWithGoogle() async {
     try {
+      String result = "";
       if (kIsWeb) {
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
-
         googleProvider
             .addScope('https://www.googleapis.com/auth/contacts.readonly');
-
         UserCredential userCredential1 =
             await _auth.signInWithPopup(googleProvider);
-
         CollectionReference dbUsers =
             FirebaseFirestore.instance.collection('users');
         DocumentSnapshot userSnap =
             await dbUsers.doc(userCredential1.user!.email.toString()).get();
-        String u_uid = userSnap['password'].toString().trim();
-        if (u_uid.isEmpty) {
+        try {
+          String uUid = userSnap['password'].toString().trim();
+          debugPrint("user already exits");
+        } catch (e) {
           dbUsers
               .doc(userCredential1.user!.email.toString())
               .set({
@@ -98,60 +97,67 @@ class AuthService {
                 'username': userCredential1.user!.displayName.toString(),
                 'uid': userCredential1.user!.uid.toString(),
                 'password': 'N/A',
-                'type': 'google'
+                'type': 'google',
+                'photo_url': userCredential1.user!.photoURL.toString(),
               })
               .then((value) => debugPrint("User Added"))
               .catchError((error) => debugPrint("Failed to add user: $error"));
-        } else {
-          debugPrint("user already exits");
         }
         SharedPreferences? prefs = await SharedPreferences.getInstance();
         prefs.setString("isLoggedIn", "login");
         prefs.setString("u_email", userCredential1.user!.email.toString());
         return "success";
       } else {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-        final GoogleSignInAuthentication? googleAuth =
-            await googleUser?.authentication;
-        if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
-          // Create a new credential
-          final credential = GoogleAuthProvider.credential(
-            accessToken: googleAuth?.accessToken,
-            idToken: googleAuth?.idToken,
-          );
-          UserCredential userCredential =
-              await _auth.signInWithCredential(credential);
-          CollectionReference dbUsers =
-              FirebaseFirestore.instance.collection('users');
-          DocumentSnapshot userSnap =
-              await dbUsers.doc(userCredential.user!.email.toString()).get();
-          String u_uid = userSnap['password'].toString().trim();
-          if (u_uid.isEmpty) {
-            dbUsers
-                .doc(userCredential.user!.email.toString())
-                .set({
-                  'full_name': userCredential.user!.displayName.toString(),
-                  'username': userCredential.user!.displayName.toString(),
-                  'uid': userCredential.user!.uid.toString(),
-                  'password': 'N/A',
-                  'type': 'google'
-                })
-                .then((value) => debugPrint("User Added"))
-                .catchError(
-                    (error) => debugPrint("Failed to add user: $error"));
+        try {
+          final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+          final GoogleSignInAuthentication? googleAuth =
+              await googleUser?.authentication;
+          if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
+            final credential = GoogleAuthProvider.credential(
+              accessToken: googleAuth?.accessToken,
+              idToken: googleAuth?.idToken,
+            );
+            UserCredential userCredential2 =
+                await _auth.signInWithCredential(credential);
+            CollectionReference dbUsers1 =
+                FirebaseFirestore.instance.collection('users');
+            DocumentSnapshot userSnap2 = await dbUsers1
+                .doc(userCredential2.user!.email.toString())
+                .get();
+            try {
+              String uUid2 = userSnap2['password'].toString().trim();
+              debugPrint("user already exits");
+            } catch (e) {
+              dbUsers1
+                  .doc(userCredential2.user!.email.toString())
+                  .set({
+                    'full_name': userCredential2.user!.displayName.toString(),
+                    'username': userCredential2.user!.displayName.toString(),
+                    'uid': userCredential2.user!.uid.toString(),
+                    'password': 'N/A',
+                    'type': 'google',
+                    'photo_url': userCredential2.user!.photoURL.toString(),
+                  })
+                  .then((value) => debugPrint("User Added"))
+                  .catchError(
+                      (error) => debugPrint("Failed to add user: $error"));
+            }
+            SharedPreferences? prefs1 = await SharedPreferences.getInstance();
+            prefs1.setString("isLoggedIn", "login");
+            prefs1.setString("u_email", userCredential2.user!.email.toString());
+            result = "success";
           } else {
-            debugPrint("user already exits");
+            result += "auth error ";
           }
-          SharedPreferences? prefs = await SharedPreferences.getInstance();
-          prefs.setString("isLoggedIn", "login");
-          prefs.setString("u_email", userCredential.user!.email.toString());
-          return "success";
+        } catch (e) {
+          result += (" $e").toString();
         }
       }
+      return result;
+      // }
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message!); // Displaying the error message
-      return "error";
+      return e.message!;
     }
   }
 }
