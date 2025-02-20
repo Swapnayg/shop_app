@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_app/core/model/category.dart';
 
 class CategoryCard extends StatelessWidget {
-  final Category data;
+  final Category_P data;
   final Function()? onTap;
   const CategoryCard({super.key, required this.data, required this.onTap});
 

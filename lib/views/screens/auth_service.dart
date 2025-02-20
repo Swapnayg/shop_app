@@ -98,6 +98,7 @@ class AuthService {
                 'uid': userCredential1.user!.uid.toString(),
                 'password': 'N/A',
                 'type': 'google',
+                'wallet': "0",
                 'photo_url': userCredential1.user!.photoURL.toString(),
               })
               .then((value) => debugPrint("User Added"))
@@ -136,6 +137,7 @@ class AuthService {
                     'uid': userCredential2.user!.uid.toString(),
                     'password': 'N/A',
                     'type': 'google',
+                    'wallet': "0",
                     'photo_url': userCredential2.user!.photoURL.toString(),
                   })
                   .then((value) => debugPrint("User Added"))

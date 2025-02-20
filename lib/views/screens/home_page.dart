@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Category> categoryData = CategoryService.categoryData;
+  List<Category_P> categoryData = CategoryService.categoryData;
   List<Product> productData = Productservice.productData;
 
   late Timer flashsaleCountdownTimer;

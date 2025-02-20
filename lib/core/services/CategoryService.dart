@@ -1,8 +1,8 @@
 import 'package:shop_app/core/model/category.dart';
 
 class CategoryService {
-  static List<Category> categoryData =
-      categoryRawData.map((data) => Category.fromJson(data)).toList();
+  static List<Category_P> categoryData =
+      categoryRawData.map((data) => Category_P.fromJson(data)).toList();
 }
 
 var categoryRawData = [

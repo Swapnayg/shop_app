@@ -511,6 +511,7 @@ class _LoginPageState extends State<RegisterPage> {
             'uid': user.uid.trim().toString(),
             'password': _password.text.trim().toString(),
             'type': 'email',
+            'wallet': "0",
             'photo_url': "",
           })
           .then((value) => debugPrint("User Added"))
